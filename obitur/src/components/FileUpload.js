@@ -8,6 +8,7 @@ import * as fs from "fs";
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
 const FileUpload = () => {
+    const [fileUrl, updateFileUrl] = useState(``)
     const [filename, setFile] = useState()
     const [name, setName] = useState()
     const [date, setDate] = useState()
@@ -23,58 +24,28 @@ const FileUpload = () => {
       }
     const generate = (event) => {
         console.log("parent gen hit")
-        generateWordDocument(event)
+        const myHTML = `<h1> ${name}</h1><img src=${filename}><h2> ${date}</h2><body>
+        ${description} 
+        </body>`;
+        onChangee(myHTML)
+
+
     }
-    const generateWordDocument = async (event) => {
-        onChange(filename)
-        event.preventDefault();
-        const doc = new Document({
-            sections: [{
-                properties: {},
-                children: [
-                    new Paragraph({
-                        children: [
-                            new TextRun(name),
-                        ],
-                    }),
-                    new Paragraph({
-                        children: [
-                            new ImageRun({
-                                data: filename,
-                                transformation: {
-                                    width: [500],
-                                    height: [300],
-                                },
-                            }),
-                        ],
-                    }),
-                    new Paragraph({
-                        children: [
-                            new TextRun(date),
-                        ],
-                    }),
-                    new Paragraph({
-                        children: [
-                            new TextRun(description),
-                        ],
-                    }),
-                ],
-            }]
-        });
-        console.log("generate word hit")
-        Packer.toBlob(doc).then((blob) =>  {
-            // saveAs from FileSaver will download the file
-           
-            saveAs(blob, "example.docx");
-        });
- 
-        // saveDocumentToFile(doc, "New Document.docx")
-    }
+    async function onChangee(html) {
+        try {
+          const added = await client.add(html)
+          const url = `https://ipfs.io/ipfs/${added.path}`
+          updateFileUrl(url)
+        } catch (error) {
+          console.log('Error uploading file: ', error)
+        }  
+      }
 
     
     const change = (event) => {
-    setFile(event.target.files[0])
-    console.log(event.target.files[0])
+        onChange(event.target.files[0])
+   
+
     }
     
     
@@ -85,11 +56,16 @@ const FileUpload = () => {
          <label> Enter Years of Life</label>
          <input type="text" value={date} onChange={(e) => setDate(e.target.value)}></input><br></br>
          <label>Enter Description</label> <br></br>
-         <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+         <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea> <br></br>
          <label>Insert Picture</label>
           <input type="file" onChange={change}/><br></br>
           {/* {filename !== undefined ? <div> <h1>File Present</h1> <h2> {filename.name}</h2>  <button> Upload to ipfs</button> </div> : <h1>Upload</h1> } */}
             <button onClick={generate}>Create Obituary</button>
+            {
+        fileUrl && (
+        <div> Your file Url is {fileUrl}</div>
+        )
+      }
      </div>
  )
 }

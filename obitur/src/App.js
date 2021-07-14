@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
 function App() {
+  const myHTML = `<h1>John Doe</h1>`;
   const history = useHistory();
 const generateObituary= () => {
   history.push("/generate");
@@ -16,7 +17,7 @@ const generateObituary= () => {
     const file = e.target.files[0]
     console.log(file)
     try {
-      const added = await client.add(file)
+      const added = await client.add(myHTML)
       const url = `https://ipfs.io/ipfs/${added.path}`
       updateFileUrl(url)
     } catch (error) {
@@ -32,22 +33,12 @@ const generateObituary= () => {
     <Route path="/" exact render={(props) =>
   (
     <>
-   <input
-        type="file"
-         onChange={onChange}
-      />
-            {
-        fileUrl && (
-        <div> Your file Url is {fileUrl}</div>
-        )
-      }
-    <button onClick={generateObituary}>Generate Obituary</button>
-
+    <FileUpload></FileUpload>
     </>
   )  
   }></Route>
-    <Route path="/generate" exact component={FileUpload}></Route>
-{/* <FileUpload/> */}
+
+
 
   </div>
 

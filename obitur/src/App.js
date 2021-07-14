@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { create } from 'ipfs-http-client'
-import GeneratePDF from './components/GeneratePDF'
+import FileUpload from './components/FileUpload'
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
 function App() {
   const [fileUrl, updateFileUrl] = useState(``)
   async function onChange(e) {
     const file = e.target.files[0]
+    console.log(file)
     try {
       const added = await client.add(file)
       const url = `https://ipfs.io/ipfs/${added.path}`
@@ -15,8 +16,12 @@ function App() {
       console.log('Error uploading file: ', error)
     }  
   }
-  return (<div>
-<GeneratePDF></GeneratePDF>
+
+
+  return (
+  <div>
+<FileUpload/>
+
   </div>
     // <div className="App">
     //   <h1>IPFS Example</h1>

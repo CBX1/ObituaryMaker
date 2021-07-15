@@ -2,7 +2,7 @@
 import {useState, useEffect} from 'react';
 import { create } from 'ipfs-http-client'
 import { saveAs } from "file-saver"
-import * as fs from "fs";
+import {head, head1, body, body1, rest} from './constants'
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
 const FileUpload = () => {
@@ -13,7 +13,10 @@ const FileUpload = () => {
     const [date, setDate] = useState()
     const [description, setDescription] = useState()
 
-
+    const imgStyle = {
+        height: '30%',
+        width: '30%',
+      };
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
           const fileReader = new FileReader();
@@ -29,21 +32,29 @@ const FileUpload = () => {
         });
       };
 
+        
+    const change = (event) => {
+        setFile(event.target.files[0])
+        onChange(event.target.files[0])
+
+
+    }
+
     async function onChange(file) {
         try {
          const base64Image= await convertBase64(file)
-          setFile(base64Image)
+        await  setFile(base64Image)
+          console.log(filename)
         
         } catch (error) {
           console.log('Error uploading file: ', error)
         }  
       }
-    const generate = (event) => {
-        
+
+    const generate = (event) => {      
         console.log("parent gen hit")
-        const myHTML = `<h1> ${name}</h1><img src=${filename}><h2> ${date}</h2><body>
-        ${description} 
-        </body>`;
+        console.log(head)
+        const myHTML =  head + `${name}` + head1 + `${filename}` + body + `${date}` + body1 + `${description}` + rest
         onChangee(myHTML)
         
 
@@ -59,12 +70,7 @@ const FileUpload = () => {
         }  
       }
 
-    
-    const change = (event) => {
-        onChange(event.target.files[0])
-   
-
-    }
+  
     
     
     return(
@@ -77,7 +83,7 @@ const FileUpload = () => {
          <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea> <br></br>
          <label>Insert Picture</label>
           <input type="file" onChange={change}/><br></br>
-          {/* {filename !== undefined ? <div> <h1>File Present</h1> <h2> {filename.name}</h2>  <button> Upload to ipfs</button> </div> : <h1>Upload</h1> } */}
+          {filename !== undefined ? <div> Image Preview <br/> <img style={imgStyle} src={filename}/>  </div>: <span></span>}
             <button onClick={generate}>Create Obituary</button>
             {
         fileUrl && (

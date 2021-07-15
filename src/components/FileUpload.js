@@ -6,26 +6,46 @@ import * as fs from "fs";
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
 const FileUpload = () => {
+   
     const [fileUrl, updateFileUrl] = useState(``)
     const [filename, setFile] = useState()
     const [name, setName] = useState()
     const [date, setDate] = useState()
     const [description, setDescription] = useState()
+
+
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+    
+          fileReader.onload = () => {
+            resolve(fileReader.result);
+          };
+    
+          fileReader.onerror = (error) => {
+            reject(error);
+          };
+        });
+      };
+
     async function onChange(file) {
         try {
-          const added = await client.add(file)
-          const url = `https://ipfs.io/ipfs/${added.path}`
-          setFile(url)
+         const base64Image= await convertBase64(file)
+          setFile(base64Image)
+        
         } catch (error) {
           console.log('Error uploading file: ', error)
         }  
       }
     const generate = (event) => {
+        
         console.log("parent gen hit")
         const myHTML = `<h1> ${name}</h1><img src=${filename}><h2> ${date}</h2><body>
         ${description} 
         </body>`;
         onChangee(myHTML)
+        
 
 
     }

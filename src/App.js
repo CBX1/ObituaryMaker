@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
 function App() {
+
   const myHTML = `<h1>John Doe</h1>`;
   const history = useHistory();
 const generateObituary= () => {
@@ -17,9 +18,11 @@ const generateObituary= () => {
     const file = e.target.files[0]
     console.log(file)
     try {
+    
       const added = await client.add(myHTML)
       const url = `https://ipfs.io/ipfs/${added.path}`
       updateFileUrl(url)
+  
     } catch (error) {
       console.log('Error uploading file: ', error)
     }  
@@ -29,7 +32,7 @@ const generateObituary= () => {
   return (
 
   <div>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css"/>
     <Route path="/" exact render={(props) =>
   (
     <>

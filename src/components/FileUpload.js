@@ -12,6 +12,7 @@ const FileUpload = () => {
     const [name, setName] = useState()
     const [date, setDate] = useState()
     const [description, setDescription] = useState()
+    const [filenameReal, setfileNameReal] = useState()
 
     const imgStyle = {
         height: '30%',
@@ -34,8 +35,11 @@ const FileUpload = () => {
 
         
     const change = (event) => {
+      setfileNameReal(event.target.files[0].name)
         setFile(event.target.files[0])
+     
         onChange(event.target.files[0])
+     
 
 
     }
@@ -51,7 +55,9 @@ const FileUpload = () => {
         }  
       }
 
-    const generate = (event) => {      
+    const generatee = (event) => {   
+      event.preventDefault();
+         
         console.log("parent gen hit")
         console.log(head)
         const myHTML =  head + `${name}` + head1 + `${filename}` + body + `${date}` + body1 + `${description}` + rest
@@ -63,6 +69,7 @@ const FileUpload = () => {
     async function onChangee(html) {
         try {
           const added = await client.add(html)
+          
           const url = `https://ipfs.io/ipfs/${added.path}`
           updateFileUrl(url)
         } catch (error) {
@@ -75,20 +82,23 @@ const FileUpload = () => {
     
     return(
      <div> 
+       <form>
          <label> Enter Full Name</label>
          <input type="text" value={name} onChange={(e) => setName(e.target.value)}></input><br/>
          <label> Enter Years of Life</label>
-         <input type="text" value={date} onChange={(e) => setDate(e.target.value)}></input><br></br>
-         <label>Enter Description</label> <br></br>
+         <input type="text" value={date} onChange={(e) => setDate(e.target.value)}></input>
+         <label>Enter Description</label> 
          <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea> <br></br>
-         <label>Insert Picture</label>
-          <input type="file" onChange={change}/><br></br>
-          {filename !== undefined ? <div> Image Preview <br/> <img style={imgStyle} src={filename}/>  </div>: <span></span>}
-            <button onClick={generate}>Create Obituary</button>
+         <label for="file-upload" class="button"> Insert Picture</label>
+          <input id="file-upload" type="file"  accept="image/png, image/jpeg" onChange={change}/><br/>
+          {filename !== undefined ? <div> Image Preview<br/> <img style={imgStyle} src={filename}/> <br></br> {filenameReal} <div>Please note images in obituary will be to full scale</div> </div>: <span></span>}
+            <button onClick={generatee}>Create Obituary</button>
+      </form>
             {
         fileUrl && (
-        <div> Your file Url is {fileUrl}</div>
+        <div> Your Url is <a href={fileUrl}>{fileUrl} </a> Please save it to ensure it is not lost</div>
         )
+
       }
      </div>
  )

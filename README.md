@@ -1,6 +1,7 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Hosted on obituary.ml
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4cbc49bc-4720-4657-9750-d10457b737db/deploy-status)](https://app.netlify.com/sites/awesome-brattain-f5cdee/deploys)
 
 ## Available Scripts

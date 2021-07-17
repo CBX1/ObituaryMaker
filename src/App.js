@@ -78,7 +78,6 @@ const generateObituary= (path) => {
 
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css"/>
     <Route path="/generate" exact render={(props) =>
   (
     <div className='container'>
